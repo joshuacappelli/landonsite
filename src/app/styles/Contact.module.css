@@ -1,0 +1,190 @@
+/* styles/Contact.module.css */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+  
+  .title {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    color: var(--primary);
+  }
+  
+  .subtitle {
+    text-align: center;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 3rem;
+  }
+  
+  .contentWrapper {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 3rem;
+    margin-bottom: 4rem;
+  }
+  
+  .contactInfo h2,
+  .contactForm h2,
+  .newsletter h2 {
+    margin-bottom: 1.5rem;
+    color: var(--primary);
+    font-size: 1.5rem;
+  }
+  
+  .contactItem {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .contactItem svg {
+    margin-right: 1rem;
+    color: var(--accent);
+  }
+  
+  .contactItem a {
+    color: var(--text);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .contactItem a:hover {
+    color: var(--accent);
+  }
+  
+  .formGroup {
+    margin-bottom: 1.5rem;
+  }
+  
+  .formGroup label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+  
+  .formGroup input,
+  .formGroup textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: inherit;
+  }
+  
+  .formGroup textarea {
+    resize: vertical;
+  }
+  
+  .submitButton {
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .submitButton:hover {
+    background-color: var(--accent-dark);
+  }
+  
+  .newsletter {
+    background-color: var(--bg-secondary);
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  .newsletter p {
+    margin-bottom: 1.5rem;
+  }
+  
+  .newsletterForm {
+    display: flex;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  .newsletterForm input {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 4px 0 0 4px;
+    font-size: 1rem;
+  }
+  
+  .newsletterForm button {
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .newsletterForm button:hover {
+    background-color: var(--accent-dark);
+  }
+  
+  .formStatus {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 4px;
+  }
+  
+  .error {
+    background-color: rgba(255, 99, 71, 0.1);
+    color: tomato;
+    border: 1px solid tomato;
+  }
+  
+  .success {
+    background-color: rgba(46, 213, 115, 0.1);
+    color: #2ed573;
+    border: 1px solid #2ed573;
+  }
+  
+  /* CSS Variables - Add these to your globals.css */
+  :root {
+    --primary: #3498db;
+    --primary-dark: #2980b9;
+    --accent: #e74c3c;
+    --accent-dark: #c0392b;
+    --text: #333;
+    --text-secondary: #666;
+    --bg: #fff;
+    --bg-secondary: #f7f9fc;
+    --border: #ddd;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .contentWrapper {
+      grid-template-columns: 1fr;
+    }
+    
+    .contactInfo {
+      margin-bottom: 2rem;
+    }
+    
+    .newsletterForm {
+      flex-direction: column;
+    }
+    
+    .newsletterForm input {
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+    
+    .newsletterForm button {
+      border-radius: 4px;
+    }
+  }
