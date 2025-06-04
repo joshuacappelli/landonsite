@@ -32,7 +32,7 @@ export default function Blog() {
         if (!response.ok) throw new Error('Failed to fetch posts');
         
         const data = await response.json();
-        const postsWithParsedTags = data.map((post: any) => ({
+        const postsWithParsedTags = data.map((post: Post) => ({
           ...post,
           tags: typeof post.tags === 'string' ? JSON.parse(post.tags) : post.tags
         }));

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import FileUpload from '@/app/components/FileUpload';
 
 interface Media {
@@ -14,7 +13,6 @@ interface Media {
 }
 
 export default function CameraRollPage() {
-  const router = useRouter();
   const [activeTab, setActiveTab] = useState<'image' | 'video'>('image');
   const [media, setMedia] = useState<Media[]>([]);
   const [loading, setLoading] = useState(true);
@@ -43,8 +41,8 @@ export default function CameraRollPage() {
         console.log('Fetched videos:', videosData);
         
         setMedia([
-          ...imagesData.map((img: any) => ({ ...img, type: 'image' as const })),
-          ...videosData.map((vid: any) => ({ ...vid, type: 'video' as const }))
+          ...imagesData.map((img: Media) => ({ ...img, type: 'image' as const })),
+          ...videosData.map((vid: Media) => ({ ...vid, type: 'video' as const }))
         ]);
       } catch (error) {
         console.error('Error fetching media:', error);

@@ -2,7 +2,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 
 interface AboutData {
   id: number;
@@ -33,7 +32,6 @@ interface NewFact {
 }
 
 export default function AboutPage() {
-  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [aboutData, setAboutData] = useState<AboutData | null>(null);
   const [quickFacts, setQuickFacts] = useState<QuickFact[]>([]);

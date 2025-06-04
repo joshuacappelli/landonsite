@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getHeroFavorites, createHeroFavorite, updateHeroFavorite, deleteHeroFavorite, getHeroSettings, createHeroSettings, updateHeroSettings, getHeroTags, createHeroTag, updateHeroTag, deleteHeroTag } from '@/app/db/queries';
+import { getHeroFavorites, createHeroFavorite, updateHeroFavorite, deleteHeroFavorite } from '@/app/db/queries';
 
 // GET all hero favorites
 export async function GET() {

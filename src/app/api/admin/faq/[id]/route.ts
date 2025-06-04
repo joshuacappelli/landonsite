@@ -1,9 +1,12 @@
 import { NextResponse } from 'next/server';
 import { getFAQ, createFAQ, updateFAQ, deleteFAQ } from '@/app/db/queries';
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
-  const id = parseInt(params.id);
+type Params = Promise<{ id: string }>
 
+export async function GET(request: Request, { params }: { params: Params }) {
+  const { id } = await params;
+  const idInt = parseInt(id);
+  console.log(idInt);
   try {
     const faq = await getFAQ();
     return NextResponse.json(faq);
@@ -25,12 +28,13 @@ export async function POST(request: Request) {
   }
 }
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
-  const id = parseInt(params.id);
+export async function PUT(request: Request, { params }: { params: Params }) {
+  const { id } = await params;
+  const idInt = parseInt(id); 
   const data = await request.json();
 
   try {
-    const result = await updateFAQ(id, data);
+    const result = await updateFAQ(idInt, data);
     return NextResponse.json(result);
   } catch (error) {
     console.error('Error updating FAQ:', error);
@@ -38,11 +42,12 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
-  const id = parseInt(params.id);
+export async function DELETE(request: Request, { params }: { params: Params }) {
+  const { id } = await params;
+  const idInt = parseInt(id);
 
   try {
-    await deleteFAQ(id);
+    await deleteFAQ(idInt);
     return NextResponse.json({ message: 'FAQ deleted successfully' }, { status: 200 });
   } catch (error) {
     console.error('Error deleting FAQ:', error);

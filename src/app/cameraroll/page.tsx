@@ -8,7 +8,7 @@ import CountryNav from '../components/countryNav';
 interface Media {
   id: number;
   type: 'image' | 'video';
-  url: string;
+  image: string;
   location: string;
   date: string;
 }
@@ -34,18 +34,18 @@ export default function CameraRoll() {
         const images = await imagesRes.json();
         const videos = await videosRes.json();
         
-        const formattedImages = images.map((img: any) => ({
+        const formattedImages = images.map((img: Media) => ({
           id: img.id,
           type: 'image' as const,
-          url: img.image,
+          image: img.image,
           location: img.location,
           date: img.date
         }));
         
-        const formattedVideos = videos.map((vid: any) => ({
+        const formattedVideos = videos.map((vid: Media) => ({
           id: vid.id,
           type: 'video' as const,
-          url: vid.video,
+          image: vid.image,
           location: vid.location,
           date: vid.date
         }));
@@ -149,14 +149,14 @@ export default function CameraRoll() {
                 >
                   {item.type === 'image' ? (
                     <Image
-                      src={item.url}
+                      src={item.image}
                       alt={`Photo from ${item.location}`}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   ) : (
                     <video
-                      src={item.url}
+                      src={item.image}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   )}
@@ -190,14 +190,14 @@ export default function CameraRoll() {
               <div className="relative aspect-video">
                 {selectedMedia.type === 'image' ? (
                   <Image
-                    src={selectedMedia.url}
+                    src={selectedMedia.image}
                     alt={`Photo from ${selectedMedia.location}`}
                     fill
                     className="object-contain"
                   />
                 ) : (
                   <video
-                    src={selectedMedia.url}
+                    src={selectedMedia.image}
                     controls
                     className="w-full h-full object-contain"
                   />

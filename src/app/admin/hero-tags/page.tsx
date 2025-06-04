@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 
 interface HeroTag {
   id: number;
@@ -15,7 +14,6 @@ interface FormData {
 }
 
 export default function HeroTagsPage() {
-  const router = useRouter();
   const [tags, setTags] = useState<HeroTag[]>([]);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState<FormData>({

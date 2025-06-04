@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 
 interface HeroFavorite {
   id: number;
@@ -17,7 +16,6 @@ interface FormData {
 }
 
 export default function HeroFavoritesPage() {
-  const router = useRouter();
   const [favorites, setFavorites] = useState<HeroFavorite[]>([]);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState<FormData>({

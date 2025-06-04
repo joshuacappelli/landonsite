@@ -4,11 +4,12 @@ import { updateAboutMe } from '@/app/db/queries';
 // PUT update about me information
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const data = await request.json();
-    const id = parseInt(params.id);
+    const { id: idParam } = await params;
+    const id = parseInt(idParam);
     
     console.log('Updating about with ID:', id);
     console.log('Update data:', data);
@@ -19,4 +20,4 @@ export async function PUT(
     console.error('Error updating about information:', error);
     return NextResponse.json({ error: 'Failed to update about information' }, { status: 500 });
   }
-} 
+}

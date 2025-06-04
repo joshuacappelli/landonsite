@@ -1,6 +1,15 @@
 import { NextResponse } from 'next/server';
 import { createCameraRollImage, createCameraRollVideo } from '@/app/db/queries';
 
+interface Media {
+  id: string;
+  type: 'image' | 'video';
+  image: string;
+  url: string;
+  location: string;
+  date: string;
+}
+
 export async function POST(request: Request) {
   try {
     const data = await request.json();
@@ -44,7 +53,7 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const [images, videos] = await Promise.all([
       fetch('/api/admin/camera-roll/images'),
@@ -55,11 +64,11 @@ export async function GET(request: Request) {
     const videosData = await videos.json();
 
     const formattedData = [
-      ...imagesData.map((img: any) => ({
+      ...imagesData.map((img: Media) => ({
         ...img,
         type: 'image'
       })),
-      ...videosData.map((vid: any) => ({
+      ...videosData.map((vid: Media) => ({
         ...vid,
         type: 'video'
       }))

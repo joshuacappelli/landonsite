@@ -19,6 +19,7 @@ export default function Nav({ onGlobeClick }: NavProps) {
     if (isGlobeOpen) {
       window.location.href = "/globe";
     }
+    toggleGlobe();
   }, [isGlobeOpen]);
 
   return (

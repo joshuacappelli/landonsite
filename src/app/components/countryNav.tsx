@@ -17,7 +17,6 @@ interface ContinentMap {
 export default function CountryNav() {
   const [activeContinent, setActiveContinent] = useState<string | null>(null);
   const [continents, setContinents] = useState<ContinentMap>({});
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchContinents() {
@@ -28,9 +27,7 @@ export default function CountryNav() {
         setContinents(data);
       } catch (error) {
         console.error('Error fetching continents:', error);
-      } finally {
-        setLoading(false);
-      }
+      } 
     }
 
     fetchContinents();
@@ -74,7 +71,7 @@ export default function CountryNav() {
                         }
                       }
                     `}</style>
-                    {continents[continent].map(({ country, postCount, id }) => (
+                    {continents[continent].map(({ country, id }) => (
                       <Link
                         key={country}
                         href={`/blog/${id}`}

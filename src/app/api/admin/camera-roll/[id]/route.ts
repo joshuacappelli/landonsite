@@ -2,13 +2,16 @@ import { NextResponse } from 'next/server';
 import { deleteCameraRollImage, deleteCameraRollVideo } from '@/app/db/queries';
 import { deleteFile } from '@/lib/s3';
 
+type Params = Promise<{ id: string }>
+
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Params }
 ) {
   try {
-    const id = parseInt(params.id);
-    if (isNaN(id)) {
+    const { id } = await params;
+    const idInt = parseInt(id);
+    if (isNaN(idInt)) {
       return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
     }
 
@@ -43,9 +46,9 @@ export async function DELETE(
 
     // Delete from database
     if (type === 'image') {
-      await deleteCameraRollImage(id);
+      await deleteCameraRollImage(idInt);
     } else {
-      await deleteCameraRollVideo(id);
+      await deleteCameraRollVideo(idInt);
     }
 
     return NextResponse.json({ success: true });

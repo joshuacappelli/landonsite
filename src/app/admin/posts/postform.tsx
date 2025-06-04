@@ -3,8 +3,20 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
+interface Post {
+  id: number;
+  title: string;
+  date: Date;
+  content: string;
+  country: string;
+  guide: boolean;
+  location: string;
+  tags: string[];
+  image: string;
+}
+
 interface PostFormProps {
-  post?: any;
+  post?: Post;
 }
 
 interface FormData {

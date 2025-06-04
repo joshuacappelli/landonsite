@@ -41,6 +41,7 @@ export async function updateHeroSettings(id: number, data: {
   
   // Remove id from the data object if it exists
   const { id: _, ...updateData } = data;
+  console.log(_)
   
   // Log each field and its type
   Object.entries(updateData).forEach(([key, value]) => {

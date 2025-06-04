@@ -3,8 +3,20 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
+interface Post {
+  id: string;
+  title: string;
+  date: string;
+  content: string;
+  location: string;
+  image: string;
+  country: string;
+  guide: boolean;
+  tags: string[];
+}
+
 export default function PostsPage() {
-  const [posts, setPosts] = useState<any[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

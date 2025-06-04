@@ -26,6 +26,7 @@ export default function HeroSettingsPage() {
         
         const data = await response.json();
         setHeroSettings(data);
+        console.log(heroSettings);
         setFormData(data);
       } catch (error) {
         console.error('Error fetching hero settings:', error);

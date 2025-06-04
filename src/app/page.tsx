@@ -162,7 +162,7 @@ export default function Home() {
                 {/* Left Column - Text */}
                 <div className="space-y-6">
                   <h2 className="text-5xl font-bold text-amber-800 dark:text-amber-600">
-                    Hey, I'm Landon
+                    Hey, I&apos;m Landon
                   </h2>
                   
                   <div className="space-y-6">
@@ -197,7 +197,7 @@ export default function Home() {
                     />
                   ) : (
                     <div className="text-gray-400 dark:text-gray-500 text-lg">
-                      Landon's image will go here
+                      Landon image will go here
                     </div>
                   )}
                 </div>
