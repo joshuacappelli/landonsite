@@ -25,10 +25,16 @@ export async function POST(request: Request) {
 }
 
 // PUT update hero favorite
-export async function PUT(request: Request) {
+export async function PUT(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
+    const { id } = await params;
+    const idInt = parseInt(id);
     const data = await request.json();
-    const result = await updateHeroFavorite(data.id, data);
+    
+    const result = await updateHeroFavorite(idInt, data);
     return NextResponse.json(result);
   } catch (error) {
     console.error('Error updating hero favorite:', error);
@@ -37,22 +43,22 @@ export async function PUT(request: Request) {
 }
 
 // DELETE hero favorite
-export async function DELETE(request: Request) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
-    const { searchParams } = new URL(request.url);
-    const id = searchParams.get('id');
+    const { id } = await params;
+    const idInt = parseInt(id);
     
     if (!id) {
       return NextResponse.json({ error: 'ID is required' }, { status: 400 });
     }
 
-    const result = await deleteHeroFavorite(parseInt(id));
+    const result = await deleteHeroFavorite(idInt);
     return NextResponse.json(result);
   } catch (error) {
     console.error('Error deleting hero favorite:', error);
     return NextResponse.json({ error: 'Failed to delete hero favorite' }, { status: 500 });
   }
-
-
-} 
-
+}

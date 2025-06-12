@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getFAQ, createFAQ, updateFAQ, deleteFAQ } from '@/app/db/queries';
 
-type Params = Promise<{ id: string }>
-
 export async function GET(request: Request, { params }: { params: Params }) {
   const { id } = await params;
   const idInt = parseInt(id);
@@ -27,6 +25,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Failed to create FAQ' }, { status: 500 });
   }
 }
+
+type Params = Promise<{ id: string }>
+
 
 export async function PUT(request: Request, { params }: { params: Params }) {
   const { id } = await params;

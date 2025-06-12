@@ -4,14 +4,15 @@ import { deleteQuickFact } from '@/app/db/queries';
 // DELETE quick fact
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id);
+    const { id } = await params;
+    const idInt = parseInt(id);
     
-    console.log('Deleting quick fact with ID:', id);
+    console.log('Deleting quick fact with ID:', idInt);
     
-    const result = await deleteQuickFact(id);
+    const result = await deleteQuickFact(idInt);
     return NextResponse.json(result);
   } catch (error) {
     console.error('Error deleting quick fact:', error);
