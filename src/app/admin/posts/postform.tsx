@@ -93,23 +93,42 @@ export default function PostForm({ post }: PostFormProps) {
     
     const method = isEditing ? 'PUT' : 'POST';
     const url = isEditing ? `/api/admin/posts/${post.id}` : '/api/admin/posts';
-    console.log(formData);
+    
+    // Log the exact data being sent
+    console.log('Submitting form data:', {
+      ...formData,
+      date: new Date(formData.date).toISOString(),
+      guide: formData.guide ? 1 : 0
+    });
+    
     try {
       const response = await fetch(url, {
         method,
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          date: new Date(formData.date).toISOString(),
+          guide: formData.guide ? 1 : 0
+        }),
       });
       
-      if (!response.ok) throw new Error(`Failed to ${isEditing ? 'update' : 'create'} post`);
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Server error response:', errorData);
+        throw new Error(
+          errorData.details?.message || 
+          errorData.error || 
+          `Failed to ${isEditing ? 'update' : 'create'} post`
+        );
+      }
       
       router.push('/admin/posts');
       router.refresh();
     } catch (error) {
       console.error(`Error ${isEditing ? 'updating' : 'creating'} post:`, error);
-      alert(`Failed to ${isEditing ? 'update' : 'create'} post`);
+      alert(`Failed to ${isEditing ? 'update' : 'create'} post: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setLoading(false);
     }

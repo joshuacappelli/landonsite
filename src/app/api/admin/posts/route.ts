@@ -28,12 +28,18 @@ export async function POST(request: Request) {
     const data = await request.json();
     
     // Validate required fields
-    const requiredFields = ['title', 'content', 'date', 'image', 'location', 'country', 'tags', 'guide'];
+    const requiredFields = ['title', 'content', 'date', 'image', 'location', 'country', 'tags'];
     const missingFields = requiredFields.filter(field => !data[field]);
     
     if (missingFields.length > 0) {
       return NextResponse.json(
-        { error: `Missing required fields: ${missingFields.join(', ')}` },
+        { 
+          error: 'Validation failed',
+          details: {
+            missingFields,
+            message: `The following fields are required: ${missingFields.join(', ')}`
+          }
+        },
         { status: 400 }
       );
     }
@@ -41,7 +47,29 @@ export async function POST(request: Request) {
     // Validate tags is an array
     if (!Array.isArray(data.tags)) {
       return NextResponse.json(
-        { error: 'Tags must be an array' },
+        { 
+          error: 'Validation failed',
+          details: {
+            field: 'tags',
+            message: 'Tags must be an array'
+          }
+        },
+        { status: 400 }
+      );
+    }
+
+    // Validate date format
+    try {
+      new Date(data.date);
+    } catch (error) {
+      return NextResponse.json(
+        {
+          error: 'Validation failed',
+          details: {
+            field: 'date',
+            message: 'Invalid date format'
+          }
+        },
         { status: 400 }
       );
     }
@@ -55,14 +83,23 @@ export async function POST(request: Request) {
       location: data.location,
       country: data.country,
       tags: JSON.stringify(data.tags),
-      guide: data.guide,
+      guide: data.guide === undefined ? 0 : data.guide,
       createdAt: new Date()
     });
+
     // Get the created post
     const createdPost = await db.select().from(posts).where(eq(posts.id, Number(result.lastInsertRowid)));
     
     if (!createdPost || createdPost.length === 0) {
-      throw new Error('Failed to retrieve created post');
+      return NextResponse.json(
+        {
+          error: 'Database error',
+          details: {
+            message: 'Failed to retrieve created post'
+          }
+        },
+        { status: 500 }
+      );
     }
 
     // Parse the tags back to an array for the response
@@ -75,8 +112,13 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Error creating post:', error);
     return NextResponse.json(
-      { error: 'Failed to create post' },
+      { 
+        error: 'Server error',
+        details: {
+          message: error instanceof Error ? error.message : 'Failed to create post'
+        }
+      },
       { status: 500 }
     );
   }
-} 
+}
