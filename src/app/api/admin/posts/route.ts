@@ -62,6 +62,7 @@ export async function POST(request: Request) {
     try {
       new Date(data.date);
     } catch (error) {
+      console.error('Invalid date format:', error);
       return NextResponse.json(
         {
           error: 'Validation failed',
