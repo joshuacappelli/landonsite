@@ -1,26 +1,33 @@
-import Link from 'next/link';
+import { getPostCount, getCameraRollImageCount, getNewsletterSubscriberCount } from '@/app/db/queries';
 
-export default function AdminDashboard() {
-    return (
-      <div>
-        <h1 className="text-2xl font-bold mb-6">Dashboard Overview</h1>
+export default async function AdminPage() {
+  const [postCount, imageCount, subscriberCount] = await Promise.all([
+    getPostCount(),
+    getCameraRollImageCount(),
+    getNewsletterSubscriberCount()
+  ]);
+
+  return (
+    <div>
+      <h1 className="text-2xl font-bold mb-6">Admin Dashboard</h1>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white shadow-md rounded-lg p-6">
+          <h2 className="text-lg font-semibold mb-2">Posts</h2>
+          <p className="text-3xl font-bold text-blue-600">{postCount}</p>
+        </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <DashboardCard title="Posts" count="?" href="/admin/posts" />
-          <DashboardCard title="Camera Roll Images" count="?" href="/admin/camera-roll" />
-          <DashboardCard title="Newsletter Subscribers" count="?" href="/admin/newsletter" />
+        <div className="bg-white shadow-md rounded-lg p-6">
+          <h2 className="text-lg font-semibold mb-2">Camera Roll Images</h2>
+          <p className="text-3xl font-bold text-green-600">{imageCount}</p>
+        </div>
+        
+        <div className="bg-white shadow-md rounded-lg p-6">
+          <h2 className="text-lg font-semibold mb-2">Newsletter Subscribers</h2>
+          <p className="text-3xl font-bold text-purple-600">{subscriberCount}</p>
         </div>
       </div>
-    );
-  }
-  
-  function DashboardCard({ title, count, href }: { title: string, count: string, href: string }) {
-    return (
-      <Link href={href}>
-        <div className="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
-          <h3 className="text-lg font-medium text-gray-900">{title}</h3>
-          <p className="text-3xl font-bold mt-2">{count}</p>
-        </div>
-      </Link>
-    );
-  }
+    </div>
+  );
+}
+

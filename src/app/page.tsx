@@ -36,6 +36,9 @@ export default function Home() {
   const [heroFavorites, setHeroFavorites] = useState<HeroFavorite[]>([]);
   const [heroTags, setHeroTags] = useState<HeroTag[]>([]);
   const [loading, setLoading] = useState(true);
+  const [email, setEmail] = useState('');
+  const [isSubscribing, setIsSubscribing] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(false);
 
   useEffect(() => {
     async function fetchHeroData() {
@@ -95,6 +98,32 @@ export default function Home() {
 
     fetchHeroData();
   }, []);
+
+  const handleSubscribe = async () => {
+    try {
+      setIsSubscribing(true);
+      const response = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to subscribe to newsletter');
+      }
+
+      const data = await response.json();
+      console.log('Newsletter subscribed:', data);
+      setIsSubscribed(true);
+    } catch (error) {
+      console.error('Error subscribing to newsletter:', error);
+      alert('Failed to subscribe to newsletter. Please try again.');
+    } finally {
+      setIsSubscribing(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -278,14 +307,29 @@ export default function Home() {
                   Join my newsletter to receive updates about new travel destinations, tips, and exclusive content.
                 </p>
                 <div className="mt-8 flex justify-center gap-4">
-                  <input
-                    type="email"
-                    placeholder="Enter your email"
-                    className="px-6 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-80"
-                  />
-                  <button className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg transition-all duration-300 hover:bg-purple-700 hover:scale-105">
-                    Subscribe
-                  </button>
+                  {isSubscribed ? (
+                    <div className="bg-green-100 border border-green-400 text-green-700 px-6 py-3 rounded-lg">
+                      {"Thanks for subscribing! We'll keep you updated."}
+                    </div>
+                  ) : (
+                    <>
+                      <input
+                        type="email"
+                        placeholder="Enter your email"
+                        className="px-6 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 w-80"
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        disabled={isSubscribing}
+                      />
+                      <button 
+                        className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg transition-all duration-300 hover:bg-purple-700 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                        onClick={handleSubscribe}
+                        disabled={isSubscribing || !email}
+                      >
+                        {isSubscribing ? 'Subscribing...' : 'Subscribe'}
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

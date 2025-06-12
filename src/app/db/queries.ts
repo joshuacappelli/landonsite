@@ -1,5 +1,5 @@
 import { db } from './index';
-import { heroSettings, heroFavorites, heroTags, aboutMe, quickFacts, faq, locations, cameraRollImages, cameraRollVideos, posts } from './schema';
+import { heroSettings, heroFavorites, heroTags, aboutMe, quickFacts, faq, locations, cameraRollImages, cameraRollVideos, posts, newsLetterUsers } from './schema';
 import { eq, sql } from 'drizzle-orm';
 
 // Hero Settings Queries
@@ -208,6 +208,20 @@ export async function getLocation(id: number) {
   return await db.select().from(locations).where(eq(locations.id, id));
 }
 
+export async function getNewsletterUsers() {
+  return await db.select().from(newsLetterUsers);
+}
+
+export async function createNewsletterUser(data: {
+  email: string;
+}) {
+  return await db.insert(newsLetterUsers).values(data);
+}
+
+export async function deleteNewsletterUser(id: number) {
+  return await db.delete(newsLetterUsers).where(eq(newsLetterUsers.id, id));
+}
+
 export async function createLocation(data: {
   country: string;
   city: string;
@@ -298,6 +312,21 @@ export async function getGuidePostsByContinent() {
   }, {} as Record<string, Array<{ country: string | null; postCount: number; id: number }>>);
 
   return continentMap;
+}
+
+export async function getPostCount() {
+  const result = await db.select({ count: sql<number>`count(*)` }).from(posts);
+  return result[0].count;
+}
+
+export async function getCameraRollImageCount() {
+  const result = await db.select({ count: sql<number>`count(*)` }).from(cameraRollImages);
+  return result[0].count;
+}
+
+export async function getNewsletterSubscriberCount() {
+  const result = await db.select({ count: sql<number>`count(*)` }).from(newsLetterUsers);
+  return result[0].count;
 }
 
 

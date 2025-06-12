@@ -18,7 +18,7 @@ export default function NewsletterPage() {
   useEffect(() => {
     async function fetchSubscribers() {
       try {
-        const response = await fetch('/api/admin/newsletter');
+        const response = await fetch('/api/newsletter');
         if (!response.ok) throw new Error('Failed to fetch newsletter subscribers');
 
         const data: Subscriber[] = await response.json();
@@ -37,7 +37,7 @@ export default function NewsletterPage() {
     if (!confirm('Are you sure you want to delete this subscriber?')) return;
 
     try {
-      const response = await fetch(`/api/admin/newsletter/${id}`, {
+      const response = await fetch(`/api/newsletter/${id}`, {
         method: 'DELETE',
       });
 
