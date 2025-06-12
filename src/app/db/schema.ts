@@ -8,8 +8,8 @@ export const posts = sqliteTable('posts', {
     date: integer('date', { mode: 'timestamp' }).notNull().default(sql`CURRENT_TIMESTAMP`),
     image: text('image').notNull(),
     guide: integer('guide', { mode: 'boolean' }).notNull().default(false),
-    location: text('location').notNull(),
-    country: text('country').notNull(),
+    location: text('location'),
+    country: text('country'),
     tags: text('tags', { mode: 'json' }).notNull(),
     createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`CURRENT_TIMESTAMP`),
 });

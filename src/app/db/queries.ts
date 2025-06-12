@@ -279,7 +279,7 @@ export async function getGuidePostsByContinent() {
     .select({
       id: posts.id,
       continent: posts.location,
-      country: posts.country,
+      country: posts.country || 'Unknown',
       postCount: sql<number>`count(${posts.id})`.as('post_count')
     })
     .from(posts)
@@ -288,12 +288,14 @@ export async function getGuidePostsByContinent() {
 
   // Transform the result into a continent -> countries map
   const continentMap = result.reduce((acc, { continent, country, postCount, id }) => {
-    if (!acc[continent]) {
-      acc[continent] = [];
+    if (!continent) return acc;
+    const continentKey = continent as string;
+    if (!acc[continentKey]) {
+      acc[continentKey] = [];
     }
-    acc[continent].push({ country, postCount, id });
+    acc[continentKey].push({ country, postCount, id });
     return acc;
-  }, {} as Record<string, Array<{ country: string; postCount: number; id: number }>>);
+  }, {} as Record<string, Array<{ country: string | null; postCount: number; id: number }>>);
 
   return continentMap;
 }

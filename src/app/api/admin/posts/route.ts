@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     const data = await request.json();
     
     // Validate required fields
-    const requiredFields = ['title', 'content', 'date', 'image', 'location', 'country', 'tags'];
+    const requiredFields = ['title', 'content', 'date', 'image', 'tags'];
     const missingFields = requiredFields.filter(field => !data[field]);
     
     if (missingFields.length > 0) {

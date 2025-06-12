@@ -8,9 +8,9 @@ interface Post {
   title: string;
   date: Date;
   content: string;
-  country: string;
+  country: string | null;
   guide: boolean;
-  location: string;
+  location: string | null;
   tags: string[];
   image: string;
 }
@@ -24,8 +24,8 @@ interface FormData {
   content: string;
   date: string;
   image: string;
-  location: string;
-  country: string;
+  location: string | null;
+  country: string | null;
   tags: string[];
   guide: boolean;
 }
@@ -184,16 +184,15 @@ export default function PostForm({ post }: PostFormProps) {
         
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="location">
-            Location
+            Continent
           </label>
           <input
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             id="location"
             type="text"
             name="location"
-            value={formData.location}
+            value={formData.location || ''}
             onChange={handleChange}
-            required
           />
         </div>
         <div className="mb-4">
@@ -205,9 +204,8 @@ export default function PostForm({ post }: PostFormProps) {
             id="country"
             type="text"
             name="country"
-            value={formData.country}
+            value={formData.country || ''}
             onChange={handleChange}
-            required
           />
         </div>
         <div className="mb-4">
