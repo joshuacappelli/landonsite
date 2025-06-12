@@ -89,7 +89,7 @@ export default function Blog() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        <Nav onGlobeClick={() => {}} />
+        <Nav />
         <CountryNav />
         <div className="p-8 pt-40">
           <div className="max-w-7xl mx-auto">
@@ -102,7 +102,7 @@ export default function Blog() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Nav onGlobeClick={() => {}} />
+      <Nav />
       <CountryNav />
       <div className="p-8 pt-40">
         <div className="max-w-7xl mx-auto">

@@ -98,7 +98,7 @@ export default function BlogPost({ params }: { params: Promise<{ id: string }> }
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        <Nav onGlobeClick={() => {}} />
+        <Nav />
         <CountryNav />
         <div className="p-8 pt-40">
           <div className="max-w-4xl mx-auto">
@@ -112,7 +112,7 @@ export default function BlogPost({ params }: { params: Promise<{ id: string }> }
   if (!post) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        <Nav onGlobeClick={() => {}} />
+        <Nav />
         <CountryNav />
         <div className="p-8 pt-40">
           <div className="max-w-4xl mx-auto">
@@ -133,7 +133,7 @@ export default function BlogPost({ params }: { params: Promise<{ id: string }> }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Nav onGlobeClick={() => {}} />
+      <Nav />
       <CountryNav />
       <div className="p-8 pt-40">
         <div className="max-w-4xl mx-auto">

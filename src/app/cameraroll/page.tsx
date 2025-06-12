@@ -79,7 +79,7 @@ export default function CameraRoll() {
   if (loading) {
     return (
       <>
-        <Nav onGlobeClick={() => {}} />
+        <Nav />
         <CountryNav />
         <div className="p-8 pt-40">
           <div className="max-w-7xl mx-auto">
@@ -92,7 +92,7 @@ export default function CameraRoll() {
 
   return (
     <>
-      <Nav onGlobeClick={() => {}} />
+      <Nav />
       <CountryNav />
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 py-16 md:py-24">

@@ -82,7 +82,7 @@ export default function About() {
   if (loading) {
     return (
       <>
-        <Nav onGlobeClick={() => {}} />
+        <Nav />
         <CountryNav />
         <div className="p-8 pt-40">
           <div className="max-w-6xl mx-auto px-4 py-12 md:py-20">
@@ -96,7 +96,7 @@ export default function About() {
   if (!aboutData) {
     return (
       <>
-        <Nav onGlobeClick={() => {}} />
+        <Nav />
         <CountryNav />
         <div className="p-8 pt-40">
           <div className="max-w-6xl mx-auto px-4 py-12 md:py-20">
@@ -109,7 +109,7 @@ export default function About() {
 
   return (
     <>
-      <Nav onGlobeClick={() => {}} />
+      <Nav />
       <CountryNav />
       <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
         <Head>

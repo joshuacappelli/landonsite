@@ -32,7 +32,6 @@ interface HeroTag {
 }
 
 export default function Home() {
-  const [isGlobeOpen, setIsGlobeOpen] = useState(false);
   const [heroSettings, setHeroSettings] = useState<HeroSettings | null>(null);
   const [heroFavorites, setHeroFavorites] = useState<HeroFavorite[]>([]);
   const [heroTags, setHeroTags] = useState<HeroTag[]>([]);
@@ -97,23 +96,10 @@ export default function Home() {
     fetchHeroData();
   }, []);
 
-  const toggleGlobe = () => {
-    setIsGlobeOpen(!isGlobeOpen);
-  };
-
-  useEffect(() => {
-    if (isGlobeOpen) {
-      const globeSection = document.getElementById('globe');
-      if (globeSection) {
-        globeSection.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-  }, [isGlobeOpen]);
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        <Nav onGlobeClick={toggleGlobe} />
+        <Nav />
         <CountryNav />
         <div className="flex items-center justify-center h-screen">
           <div className="text-xl text-gray-600 dark:text-gray-300">Loading...</div>
@@ -124,7 +110,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Nav onGlobeClick={toggleGlobe} />
+      <Nav />
       <CountryNav />
       
       <main className="pt-27">

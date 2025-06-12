@@ -109,7 +109,7 @@ export default function Contact() {
 
   return (
     <>
-      <Nav onGlobeClick={() => {}} />
+      <Nav />
       <CountryNav />
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-40 px-4 sm:px-6 lg:px-8">
         <Head>
