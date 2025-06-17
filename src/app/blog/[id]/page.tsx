@@ -7,7 +7,6 @@ import CountryNav from '../../components/countryNav';
 import Loader from '../../components/loader';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import remarkBreaks from 'remark-breaks';
 
 interface Post {
   id: number;
@@ -141,7 +140,7 @@ export default function BlogPost({ params }: { params: Promise<{ id: string }> }
                       // Otherwise, render as a normal paragraph
                       return <p {...props}>{children}</p>;
                     },
-                    img: ({ node, src, alt, ...props }) => (
+                    img: ({ src, alt }) => (
                       <figure className="relative aspect-video my-8">
                         <Image
                           src={src as string}
@@ -157,7 +156,7 @@ export default function BlogPost({ params }: { params: Promise<{ id: string }> }
                         )}
                       </figure>
                     ),
-                    a: ({ node, ...props }) => (
+                    a: ({ ...props }) => (
                       <a
                         {...props}
                         target="_blank"
@@ -165,7 +164,7 @@ export default function BlogPost({ params }: { params: Promise<{ id: string }> }
                         className="text-blue-600 hover:text-blue-800 transition-colors"
                       />
                     ),
-                    code: ({ node, className, children, ...props }) => (
+                    code: ({ className, children, ...props }) => (
                       <code
                         className={`${className} bg-gray-100 rounded px-1.5 py-0.5 text-sm font-mono`}
                         {...props}
@@ -173,13 +172,13 @@ export default function BlogPost({ params }: { params: Promise<{ id: string }> }
                         {children}
                       </code>
                     ),
-                    pre: ({ node, ...props }) => (
+                    pre: ({ ...props }) => (
                       <pre
                         className="bg-gray-100 rounded-lg p-4 overflow-x-auto my-4"
                         {...props}
                       />
                     ),
-                    table: ({ node, ...props }) => (
+                    table: ({ ...props }) => (
                       <div className="overflow-x-auto my-4">
                         <table
                           className="min-w-full divide-y divide-gray-200"
@@ -187,82 +186,82 @@ export default function BlogPost({ params }: { params: Promise<{ id: string }> }
                         />
                       </div>
                     ),
-                    th: ({ node, ...props }) => (
+                    th: ({ ...props }) => (
                       <th
                         className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-black uppercase tracking-wider"
                         {...props}
                       />
                     ),
-                    td: ({ node, ...props }) => (
+                    td: ({ ...props }) => (
                       <td
                         className="px-6 py-4 whitespace-nowrap text-sm text-black"
                         {...props}
                       />
                     ),
-                    ul: ({ node, ...props }) => (
+                    ul: ({ ...props }) => (
                       <ul className="list-disc pl-6 space-y-1" {...props} />
                     ),
-                    ol: ({ node, ...props }) => (
+                    ol: ({ ...props }) => (
                       <ol className="list-decimal pl-6 space-y-1" {...props} />
                     ),
-                    li: ({ node, ...props }) => (
+                    li: ({ ...props }) => (
                       <li className="text-gray-900" {...props} />
                     ),
-                    h1: ({ node, ...props }) => (
+                    h1: ({ ...props }) => (
                       <h1
                         className="text-3xl md:text-4xl font-bold text-gray-900 mb-4"
                         {...props}
                       />
                     ),
-                    h2: ({ node, ...props }) => (
+                    h2: ({ ...props }) => (
                       <h2
                         className="text-2xl md:text-3xl font-bold text-gray-900 mb-4"
                         {...props}
                       />
                     ),
-                    h3: ({ node, ...props }) => (
+                    h3: ({ ...props }) => (
                       <h3
                         className="text-xl md:text-2xl font-bold text-gray-900 mb-4"
                         {...props}
                       />
                     ),
-                    h4: ({ node, ...props }) => (
+                    h4: ({ ...props }) => (
                       <h4
                         className="text-lg md:text-xl font-bold text-gray-900 mb-4"
                         {...props}
                       />
                     ),
-                    h5: ({ node, ...props }) => (
+                    h5: ({ ...props }) => (
                       <h5
                         className="text-base md:text-lg font-bold text-gray-900 mb-4"
                         {...props}
                       />
                     ),
-                    h6: ({ node, ...props }) => (
+                    h6: ({ ...props }) => (
                       <h6
                         className="text-sm md:text-base font-bold text-gray-900 mb-4"
                         {...props}
                       />
                     ),
-                    hr: ({ node, ...props }) => (
+                    hr: ({ ...props }) => (
                       <hr
                         className="my-8 border-t border-gray-200"
                         {...props}
                       />
                     ),
-                    blockquote: ({ node, ...props }) => (
+                    blockquote: ({ ...props }) => (
                       <blockquote
                         className="border-l-4 border-gray-300 pl-4 italic text-gray-900 mb-4"
                         {...props}
                       />
                     ),
-                    strong: ({ node, ...props }) => (
+                    strong: ({ ...props }) => (
                       <strong
                         className="font-semibold text-gray-900"
                         {...props}
                       />
                     ),
-                    em: ({ node, ...props }) => (
+                    em: ({ ...props }) => (
                       <em
                         className="italic text-gray-900"
                         {...props}
