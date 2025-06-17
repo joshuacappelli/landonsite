@@ -4,12 +4,16 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Nav from '../components/nav';
 import CountryNav from '../components/countryNav';
+import Loader from '../components/loader';
 
 interface Media {
   id: number;
   type: 'image' | 'video';
   image: string;
-  location: string;
+  name: string;
+  continent: string;
+  country: string;
+  googleMaps: string;
   date: string;
 }
 
@@ -18,6 +22,8 @@ export default function CameraRoll() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'all' | 'image' | 'video'>('all');
   const [selectedMedia, setSelectedMedia] = useState<Media | null>(null);
+  const [selectedCountry, setSelectedCountry] = useState<string>('all');
+  const [countries, setCountries] = useState<string[]>([]);
 
   useEffect(() => {
     async function fetchMedia() {
@@ -38,7 +44,10 @@ export default function CameraRoll() {
           id: img.id,
           type: 'image' as const,
           image: img.image,
-          location: img.location,
+          name: img.name,
+          continent: img.continent,
+          country: img.country,
+          googleMaps: img.googleMaps,
           date: img.date
         }));
         
@@ -46,13 +55,27 @@ export default function CameraRoll() {
           id: vid.id,
           type: 'video' as const,
           image: vid.image,
-          location: vid.location,
+          name: vid.name,
+          continent: vid.continent,
+          country: vid.country,
+          googleMaps: vid.googleMaps,
           date: vid.date
         }));
         
-        setMedia([...formattedImages, ...formattedVideos].sort((a, b) => 
+        const allMedia = [...formattedImages, ...formattedVideos].sort((a, b) => 
           new Date(b.date).getTime() - new Date(a.date).getTime()
-        ));
+        );
+        
+        setMedia(allMedia);
+        
+        // Extract unique countries
+        const uniqueCountries = Array.from(new Set(
+          allMedia
+            .map(item => item.country)
+            .filter(country => country) // Remove null/undefined
+        )).sort();
+        
+        setCountries(uniqueCountries);
       } catch (error) {
         console.error('Error fetching media:', error);
       } finally {
@@ -64,8 +87,9 @@ export default function CameraRoll() {
   }, []);
 
   const filteredMedia = media.filter(item => {
-    if (activeTab === 'all') return true;
-    return item.type === activeTab;
+    const typeMatch = activeTab === 'all' || item.type === activeTab;
+    const countryMatch = selectedCountry === 'all' || item.country === selectedCountry;
+    return typeMatch && countryMatch;
   });
 
   const handleMediaClick = (item: Media) => {
@@ -83,7 +107,9 @@ export default function CameraRoll() {
         <CountryNav />
         <div className="p-8 pt-40">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center">Loading camera roll...</div>
+            <div className="text-center">
+              <Loader />
+            </div>
           </div>
         </div>
       </>
@@ -96,10 +122,12 @@ export default function CameraRoll() {
       <CountryNav />
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 py-16 md:py-24">
-        <div className="py-8">
-        </div>
-          {/* Tabs */}
-          <div className="flex justify-center mb-8">
+          <div className="py-8">
+          </div>
+          
+          {/* Filters */}
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-8">
+            {/* Type Tabs */}
             <div className="inline-flex rounded-lg border border-gray-200 p-1 bg-white">
               <button
                 onClick={() => setActiveTab('all')}
@@ -132,12 +160,33 @@ export default function CameraRoll() {
                 Videos
               </button>
             </div>
+
+            {/* Country Filter */}
+            <div className="relative">
+              <select
+                value={selectedCountry}
+                onChange={(e) => setSelectedCountry(e.target.value)}
+                className="appearance-none bg-white border border-gray-200 rounded-lg px-4 py-2 pr-8 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="all">All Countries</option>
+                {countries.map((country) => (
+                  <option key={country} value={country}>
+                    {country}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                </svg>
+              </div>
+            </div>
           </div>
 
           {/* Media Grid */}
           {filteredMedia.length === 0 ? (
             <div className="text-center text-gray-500">
-              No media found. Add some photos or videos to your camera roll!
+              No media found. Try adjusting your filters!
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -150,7 +199,7 @@ export default function CameraRoll() {
                   {item.type === 'image' ? (
                     <Image
                       src={item.image}
-                      alt={`Photo from ${item.location}`}
+                      alt={`Photo from ${item.name}`}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-300"
                     />
@@ -162,7 +211,10 @@ export default function CameraRoll() {
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-                      <p className="font-medium">{item.location}</p>
+                      <p className="font-medium">{item.name}</p>
+                      {item.country && (
+                        <p className="text-sm opacity-90">{item.country}</p>
+                      )}
                       <p className="text-sm opacity-90">
                         {new Date(item.date).toLocaleDateString()}
                       </p>
@@ -191,7 +243,7 @@ export default function CameraRoll() {
                 {selectedMedia.type === 'image' ? (
                   <Image
                     src={selectedMedia.image}
-                    alt={`Photo from ${selectedMedia.location}`}
+                    alt={`Photo from ${selectedMedia.name}`}
                     fill
                     className="object-contain"
                   />
@@ -205,10 +257,23 @@ export default function CameraRoll() {
               </div>
               
               <div className="p-6 bg-white">
-                <h3 className="text-xl font-semibold mb-2">{selectedMedia.location}</h3>
+                <h3 className="text-xl font-semibold mb-2">{selectedMedia.name}</h3>
+                {selectedMedia.country && (
+                  <p className="text-gray-600 mb-2">{selectedMedia.country}</p>
+                )}
                 <p className="text-gray-600">
                   {new Date(selectedMedia.date).toLocaleDateString()}
                 </p>
+                {selectedMedia.googleMaps && (
+                  <a
+                    href={selectedMedia.googleMaps}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-4 inline-block text-blue-500 hover:text-blue-600"
+                  >
+                    View on Google Maps
+                  </a>
+                )}
               </div>
             </div>
           </div>

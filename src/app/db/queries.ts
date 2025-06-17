@@ -252,8 +252,12 @@ export async function deleteLocation(id: number) {
 // Camera Roll Queries
 export async function createCameraRollImage(data: {
   image: string;
-  location: string;
+  name: string;
+  continent: string;
+  country: string;
+  googleMaps: string;
   date: string;
+  location: string;
 }) {
   return await db.insert(cameraRollImages).values({
     ...data,
@@ -263,8 +267,12 @@ export async function createCameraRollImage(data: {
 
 export async function createCameraRollVideo(data: {
   video: string;
-  location: string;
+  name: string;
+  continent: string;
+  country: string;
+  googleMaps: string;
   date: string;
+  location: string;
 }) {
   return await db.insert(cameraRollVideos).values({
     ...data,

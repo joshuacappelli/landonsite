@@ -8,7 +8,11 @@ interface Media {
   type: 'image' | 'video';
   image: string;
   url: string;
+  name: string;
+  continent: string;
+  country: string;
   location: string;
+  googleMaps: string;
   date: string;
 }
 
@@ -18,7 +22,11 @@ export default function CameraRollPage() {
   const [loading, setLoading] = useState(true);
   const [newMedia, setNewMedia] = useState({
     type: 'image' as 'image' | 'video',
-    location: ''
+    name: '',
+    continent: '',
+    country: '',
+    location: '',
+    googleMaps: ''
   });
 
   useEffect(() => {
@@ -93,7 +101,11 @@ export default function CameraRollPage() {
         body: JSON.stringify({
           type: newMedia.type,
           url: fileUrl,
+          name: newMedia.name,
+          continent: newMedia.continent,
+          country: newMedia.country,
           location: newMedia.location,
+          googleMaps: newMedia.googleMaps,
           date: new Date().toISOString()
         }),
       });
@@ -102,7 +114,7 @@ export default function CameraRollPage() {
 
       const newItem = await response.json();
       setMedia([...media, { ...newItem, type: newMedia.type }]);
-      setNewMedia({ type: 'image', location: '' });
+      setNewMedia({ type: 'image', name: '', continent: '', country: '', location: '', googleMaps: '' });
       alert('Media uploaded successfully!');
     } catch (error) {
       console.error('Error saving media:', error);
@@ -110,64 +122,124 @@ export default function CameraRollPage() {
     }
   };
 
-  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
     setNewMedia(prev => ({
       ...prev,
-      location: e.target.value
+      [name]: value
     }));
   };
 
-  if (loading) return <div>Loading camera roll...</div>;
+  if (loading) return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+    </div>
+  );
 
   const filteredMedia = media.filter(item => item.type === activeTab);
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-6">Camera Roll</h1>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <h1 className="text-3xl font-bold mb-8 text-gray-900">Camera Roll</h1>
       
       {/* Add New Media Form */}
-      <div className="bg-white shadow-md rounded-lg p-6 mb-6">
-        <h2 className="text-lg font-semibold mb-4">Add New Media</h2>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2">Media Type</label>
-            <select
-              value={newMedia.type}
-              onChange={(e) => setNewMedia(prev => ({ ...prev, type: e.target.value as 'image' | 'video' }))}
-              className="shadow border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
-            >
-              <option value="image">Image</option>
-              <option value="video">Video</option>
-            </select>
+      <div className="bg-white shadow-lg rounded-xl p-8 mb-8">
+        <h2 className="text-xl font-semibold mb-6 text-gray-900">Add New Media</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Media Type</label>
+              <select
+                value={newMedia.type}
+                onChange={(e) => setNewMedia(prev => ({ ...prev, type: e.target.value as 'image' | 'video' }))}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="image">Image</option>
+                <option value="video">Video</option>
+              </select>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
+              <input
+                type="text"
+                name="name"
+                value={newMedia.name}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Enter name"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Continent</label>
+              <input
+                type="text"
+                name="continent"
+                value={newMedia.continent}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Enter continent"
+              />
+            </div>
           </div>
-          
-          <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2">Location</label>
-            <input
-              type="text"
-              value={newMedia.location}
-              onChange={handleLocationChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="Enter location"
-              required
-            />
+
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Country</label>
+              <input
+                type="text"
+                name="country"
+                value={newMedia.country}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Enter country"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+              <input
+                type="text"
+                name="location"
+                value={newMedia.location}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Enter location"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Google Maps URL</label>
+              <input
+                type="url"
+                name="googleMaps"
+                value={newMedia.googleMaps}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Enter Google Maps URL"
+              />
+            </div>
+
+            <div className="pt-4">
+              <FileUpload
+                onUploadCompleteAction={handleUploadComplete}
+                acceptedFileTypes={newMedia.type === 'image' ? 'image/*' : 'video/*'}
+                maxFileSize={newMedia.type === 'image' ? 1 * 1024 * 1024 * 1024 : 100 * 1024 * 1024 * 1024}
+              />
+            </div>
           </div>
-          
-          <FileUpload
-            onUploadCompleteAction={handleUploadComplete}
-            acceptedFileTypes={newMedia.type === 'image' ? 'image/*' : 'video/*'}
-            maxFileSize={newMedia.type === 'image' ? 1 * 1024 * 1024 * 1024 : 100 * 1024 * 1024 * 1024} // 5MB for images, 100MB for videos
-          />
         </div>
       </div>
       
       {/* Tabs */}
-      <div className="mb-6">
+      <div className="mb-8">
         <div className="border-b border-gray-200">
-          <nav className="-mb-px flex">
+          <nav className="-mb-px flex space-x-8">
             <button
               onClick={() => setActiveTab('image')}
-              className={`py-2 px-4 text-center border-b-2 font-medium text-sm ${
+              className={`py-4 px-1 text-center border-b-2 font-medium text-sm ${
                 activeTab === 'image'
                   ? 'border-blue-500 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -177,7 +249,7 @@ export default function CameraRollPage() {
             </button>
             <button
               onClick={() => setActiveTab('video')}
-              className={`ml-8 py-2 px-4 text-center border-b-2 font-medium text-sm ${
+              className={`py-4 px-1 text-center border-b-2 font-medium text-sm ${
                 activeTab === 'video'
                   ? 'border-blue-500 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -191,71 +263,55 @@ export default function CameraRollPage() {
       
       {/* Media Grid */}
       {filteredMedia.length === 0 ? (
-        <p>No {activeTab}s found. Add your first {activeTab}!</p>
+        <div className="text-center py-12">
+          <p className="text-gray-500 text-lg">No {activeTab}s found. Add your first {activeTab}!</p>
+        </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredMedia.map((item) => (
-            <div key={item.id} className="bg-white shadow-md rounded-lg overflow-hidden">
-              <div className="h-48 overflow-hidden bg-gray-100 flex items-center justify-center">
+            <div key={item.id} className="bg-white shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300">
+              <div className="aspect-w-16 aspect-h-9 bg-gray-100">
                 {item.type === 'image' ? (
-                  <>
-                    <img 
-                      src={item.image} 
-                      alt={`Camera roll ${item.type}`} 
-                      className="w-full h-full object-cover"
-                      onError={async (e) => {
-                        console.error('Error loading image:', {
-                          originalUrl: item.image,
-                          error: e
-                        });
-                        
-                        // Try to fetch the image to check if it's accessible
-                        try {
-                          const response = await fetch(item.image);
-                          console.log('Image fetch response:', {
-                            status: response.status,
-                            statusText: response.statusText,
-                            headers: Object.fromEntries(response.headers.entries())
-                          });
-                        } catch (fetchError) {
-                          console.error('Image fetch error:', fetchError);
-                        }
-                      }}
-                      onLoad={() => {
-                        console.log('Successfully loaded image:', item.image);
-                      }}
-                    />
-                    <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 p-2">
-                      <p className="text-white text-xs truncate">{item.image}</p>
-                    </div>
-                  </>
-                ) : (
-                  <video 
-                    src={item.url}
+                  <img 
+                    src={item.image} 
+                    alt={item.name || `Camera roll ${item.type}`} 
                     className="w-full h-full object-cover"
-                    controls
                     onError={(e) => {
-                      console.error('Error loading video:', {
-                        originalUrl: item.url,
+                      console.error('Error loading image:', {
+                        originalUrl: item.image,
                         error: e
                       });
+                      (e.target as HTMLImageElement).src = '/placeholder-image.jpg';
                     }}
+                  />
+                ) : (
+                  <video 
+                    src={item.url} 
+                    controls
+                    className="w-full h-full object-cover"
                   />
                 )}
               </div>
               <div className="p-4">
-                <p className="text-sm text-gray-600 mb-1">
-                  <span className="font-semibold">Location:</span> {item.location}
-                </p>
-                <p className="text-sm text-gray-600 mb-3">
-                  <span className="font-semibold">Date:</span> {new Date(item.date).toLocaleDateString()}
-                </p>
-                <p className="text-sm text-gray-600 mb-3">
-                  <span className="font-semibold">URL:</span> {item.image}
-                </p>
+                <h3 className="font-medium text-gray-900 mb-2">{item.name || 'Untitled'}</h3>
+                <div className="text-sm text-gray-500 space-y-1">
+                  {item.continent && <p>Continent: {item.continent}</p>}
+                  {item.country && <p>Country: {item.country}</p>}
+                  {item.location && <p>Location: {item.location}</p>}
+                  {item.googleMaps && (
+                    <a 
+                      href={item.googleMaps} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-blue-500 hover:text-blue-600"
+                    >
+                      View on Google Maps
+                    </a>
+                  )}
+                </div>
                 <button
                   onClick={() => handleDelete(item.id)}
-                  className="text-red-600 hover:text-red-900 text-sm font-medium"
+                  className="mt-4 w-full bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition-colors duration-200"
                 >
                   Delete
                 </button>

@@ -18,17 +18,21 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const data = await request.json();
-    const { video, location, date } = data;
+    const { video, location, date, name, continent, country, googleMaps } = data;
 
     if (!video || !location) {
       return NextResponse.json(
-        { error: 'Video URL and location are required' },
+        { error: 'Video URL, name, continent, country, and googleMaps are required' },
         { status: 400 }
       );
     }
 
     const result = await db.insert(cameraRollVideos).values({
       video, // Store the full S3 URL
+      name,
+      continent,
+      country,
+      googleMaps,
       location,
       date: date || new Date().toISOString()
     });

@@ -49,7 +49,11 @@ export const newsLetterUsers = sqliteTable('newsletter_users', {
 export const cameraRollImages = sqliteTable('camera_roll_images', {
     id: integer('id').primaryKey(),
     image: text('image').notNull(),
-    location: text('location').notNull(),
+    continent: text('continent'),
+    country: text('country'),
+    googleMaps: text('google_maps'),
+    name: text('name'),
+    location: text('location'),
     date: integer('date', { mode: 'timestamp' }).notNull().default(sql`CURRENT_TIMESTAMP`),
     createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`CURRENT_TIMESTAMP`),
 });
@@ -57,7 +61,11 @@ export const cameraRollImages = sqliteTable('camera_roll_images', {
 export const cameraRollVideos = sqliteTable('camera_roll_videos', {
     id: integer('id').primaryKey(),
     video: text('video').notNull(),
-    location: text('location').notNull(),
+    continent: text('continent'),
+    country: text('country'),
+    googleMaps: text('google_maps'),
+    name: text('name'),
+    location: text('location'),
     date: integer('date', { mode: 'timestamp' }).notNull().default(sql`CURRENT_TIMESTAMP`),
     createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`CURRENT_TIMESTAMP`),
 });

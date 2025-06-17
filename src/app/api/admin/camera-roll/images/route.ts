@@ -18,17 +18,21 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const data = await request.json();
-    const { image, location, date } = data;
+    const { image, name, continent, country, googleMaps, date, location } = data;
 
-    if (!image || !location) {
+    if (!image || !name || !continent || !country || !googleMaps) {
       return NextResponse.json(
-        { error: 'Image URL and location are required' },
+        { error: 'Image URL, name, continent, country, and googleMaps are required' },
         { status: 400 }
       );
     }
 
     const result = await db.insert(cameraRollImages).values({
       image, // Store the full S3 URL
+      name,
+      continent,
+      country,
+      googleMaps,
       location,
       date: date || new Date().toISOString()
     });

@@ -6,19 +6,23 @@ interface Media {
   type: 'image' | 'video';
   image: string;
   url: string;
+  name: string;
+  continent: string;
   location: string;
+  country: string;
+  googleMaps: string;
   date: string;
 }
 
 export async function POST(request: Request) {
   try {
     const data = await request.json();
-    const { type, url, location, date } = data;
+    const { type, url, name, continent, country, googleMaps, date, location } = data;
     console.log(data);
 
-    if (!type || !url || !location) {
+    if (!type || !url || !name || !continent || !country || !googleMaps || !location) {
       return NextResponse.json(
-        { error: 'Type, URL, and location are required' },
+        { error: 'Type, URL, name, continent, country, and googleMaps are required' },
         { status: 400 }
       );
     }
@@ -27,12 +31,20 @@ export async function POST(request: Request) {
     if (type === 'image') {
       result = await createCameraRollImage({
         image: url,
+        name,
+        continent,
+        country,
+        googleMaps,
         location,
         date: date || new Date().toISOString()
       });
     } else if (type === 'video') {
       result = await createCameraRollVideo({
         video: url,
+        name,
+        continent,
+        country,
+        googleMaps,
         location,
         date: date || new Date().toISOString()
       });
