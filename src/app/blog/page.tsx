@@ -5,6 +5,7 @@ import Image from "next/image";
 import Nav from "../components/nav";
 import CountryNav from "../components/countryNav";
 import Link from "next/link";
+import Loader from "../components/loader";
 
 interface Post {
   id: number;
@@ -93,7 +94,7 @@ export default function Blog() {
         <CountryNav />
         <div className="p-8 pt-40">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center">Loading blog posts...</div>
+            <Loader />
           </div>
         </div>
       </div>

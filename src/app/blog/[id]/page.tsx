@@ -1,10 +1,13 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
-import Image from "next/image";
-import Nav from "../../components/nav";
-import CountryNav from "../../components/countryNav";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, use } from 'react';
+import Image from 'next/image';
+import Nav from '../../components/nav';
+import CountryNav from '../../components/countryNav';
+import Loader from '../../components/loader';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkBreaks from 'remark-breaks';
 
 interface Post {
   id: number;
@@ -12,211 +15,284 @@ interface Post {
   content: string;
   date: string;
   image: string;
+  guide: boolean;
   location: string;
   country: string;
   tags: string[];
 }
 
-interface ContentBlock {
-  type: 'text' | 'image';
-  content: string;
-  caption?: string;
-}
-
 export default function BlogPost({ params }: { params: Promise<{ id: string }> }) {
-  const router = useRouter();
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
   const resolvedParams = use(params);
-
-  // Function to parse content into blocks
-  const parseContent = (content: string): ContentBlock[] => {
-    const blocks: ContentBlock[] = [];
-    const lines = content.split('\n');
-    let currentTextBlock = '';
-
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-      
-      // Check if line is an image link (format: ![caption](image_url))
-      const imageMatch = line.match(/!\[(.*?)\]\((.*?)\)/);
-      
-      if (imageMatch) {
-        // If we have accumulated text, add it as a text block
-        if (currentTextBlock.trim()) {
-          blocks.push({
-            type: 'text',
-            content: currentTextBlock.trim()
-          });
-          currentTextBlock = '';
-        }
-        
-        // Add the image block
-        blocks.push({
-          type: 'image',
-          content: imageMatch[2],
-          caption: imageMatch[1]
-        });
-      } else {
-        // Add line to current text block
-        currentTextBlock += line + '\n';
-      }
-    }
-
-    // Add any remaining text
-    if (currentTextBlock.trim()) {
-      blocks.push({
-        type: 'text',
-        content: currentTextBlock.trim()
-      });
-    }
-
-    return blocks;
-  };
 
   useEffect(() => {
     async function fetchPost() {
       try {
         const response = await fetch(`/api/admin/posts/${resolvedParams.id}`);
-        if (!response.ok) throw new Error('Failed to fetch post');
-        
+        if (!response.ok) {
+          throw new Error('Failed to fetch post');
+        }
         const data = await response.json();
-        setPost({
-          ...data,
-          tags: typeof data.tags === 'string' ? JSON.parse(data.tags) : data.tags
-        });
+        setPost(data);
       } catch (error) {
         console.error('Error fetching post:', error);
       } finally {
         setLoading(false);
       }
     }
-    
+
     fetchPost();
   }, [resolvedParams.id]);
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <>
         <Nav />
         <CountryNav />
         <div className="p-8 pt-40">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center">Loading post...</div>
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center">
+              <Loader />
+            </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <>
         <Nav />
         <CountryNav />
         <div className="p-8 pt-40">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center text-red-500">Post not found</div>
-            <button
-              onClick={() => router.push('/blog')}
-              className="mt-4 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
-            >
-              ← Back to Blog
-            </button>
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center">
+              <h1 className="text-2xl font-bold text-gray-900">Post not found</h1>
+            </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 
-  const contentBlocks = parseContent(post.content);
-
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <>
       <Nav />
       <CountryNav />
-      <div className="p-8 pt-40">
-        <div className="max-w-4xl mx-auto">
-          {/* Back button */}
-          <button
-            onClick={() => router.push('/blog')}
-            className="mb-8 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center gap-2"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
-            </svg>
-            Back to Blog
-          </button>
-
-          {/* Post Header */}
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              {post.title}
-            </h1>
-            <div className="flex items-center gap-4 text-gray-500 dark:text-gray-400">
-              <span>{post.location}, {post.country}</span>
-              <span>•</span>
-              <span>{new Date(post.date).toLocaleDateString()}</span>
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 py-24 md:py-24">
+          <article className="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div className="relative h-[400px] md:h-[500px]">
+              <Image
+                src={post.image}
+                alt={post.title}
+                fill
+                className="object-cover"
+                priority
+              />
             </div>
-          </div>
-
-          {/* Featured Image */}
-          <div className="relative aspect-video mb-8 rounded-xl overflow-hidden">
-            <Image
-              src={post.image}
-              alt={post.title}
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-
-          {/* Tags */}
-          <div className="flex flex-wrap gap-2 mb-8">
-            {post.tags.map(tag => (
-              <span
-                key={tag}
-                className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-full text-sm"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-
-          {/* Content */}
-          <div className="prose dark:prose-invert max-w-none">
-            {contentBlocks.map((block, index) => (
-              <div key={index} className="mb-8">
-                {block.type === 'text' ? (
-                  <div className="space-y-4">
-                    {block.content.split('\n').map((paragraph, pIndex) => (
-                      <p key={pIndex} className="text-gray-600 dark:text-gray-300">
-                        {paragraph}
-                      </p>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    <div className="relative aspect-video rounded-xl overflow-hidden">
-                      <Image
-                        src={block.content}
-                        alt={block.caption || 'Blog post image'}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                    {block.caption && (
-                      <p className="text-sm text-gray-500 dark:text-gray-400 text-center italic">
-                        {block.caption}
-                      </p>
-                    )}
-                  </div>
+            
+            <div className="p-6 md:p-8">
+              <div className="flex items-center gap-4 mb-6">
+                {post.guide && (
+                  <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                    Guide
+                  </span>
+                )}
+                {post.country && (
+                  <span className="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm font-medium">
+                    {post.country}
+                  </span>
+                )}
+                {post.location && (
+                  <span className="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm font-medium">
+                    {post.location}
+                  </span>
                 )}
               </div>
-            ))}
-          </div>
+
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                {post.title}
+              </h1>
+
+              <div className="flex items-center gap-4 text-gray-500 mb-8">
+                <time dateTime={post.date}>
+                  {new Date(post.date).toLocaleDateString()}
+                </time>
+              </div>
+
+              <div className="prose prose-lg max-w-none prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-600 prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-img:rounded-lg prose-img:shadow-md prose-blockquote:border-l-4 prose-blockquote:border-gray-300 prose-blockquote:pl-4 prose-blockquote:italic prose-strong:text-gray-900 prose-strong:font-semibold prose-em:text-gray-700 prose-em:italic prose-ul:list-disc prose-ul:pl-6 prose-ol:list-decimal prose-ol:pl-6 prose-li:marker:text-gray-400 prose-li:my-1">
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    p: ({ node, children, ...props }) => {
+                      // Check if the paragraph only contains an image
+                      const hasOnlyImage = node?.children?.length === 1 && 
+                        node.children[0].type === 'element' && 
+                        node.children[0].tagName === 'img';
+                      
+                      if (hasOnlyImage) {
+                        // If it's just an image, render it without the paragraph wrapper
+                        return <>{children}</>;
+                      }
+                      
+                      // Otherwise, render as a normal paragraph
+                      return <p {...props}>{children}</p>;
+                    },
+                    img: ({ node, src, alt, ...props }) => (
+                      <figure className="relative aspect-video my-8">
+                        <Image
+                          src={src as string}
+                          alt={alt || 'Blog post image'}
+                          fill
+                          className="object-contain rounded-lg"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        />
+                        {alt && (
+                          <figcaption className="text-sm text-gray-500 text-center mt-2">
+                            {alt}
+                          </figcaption>
+                        )}
+                      </figure>
+                    ),
+                    a: ({ node, ...props }) => (
+                      <a
+                        {...props}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-800 transition-colors"
+                      />
+                    ),
+                    code: ({ node, className, children, ...props }) => (
+                      <code
+                        className={`${className} bg-gray-100 rounded px-1.5 py-0.5 text-sm font-mono`}
+                        {...props}
+                      >
+                        {children}
+                      </code>
+                    ),
+                    pre: ({ node, ...props }) => (
+                      <pre
+                        className="bg-gray-100 rounded-lg p-4 overflow-x-auto my-4"
+                        {...props}
+                      />
+                    ),
+                    table: ({ node, ...props }) => (
+                      <div className="overflow-x-auto my-4">
+                        <table
+                          className="min-w-full divide-y divide-gray-200"
+                          {...props}
+                        />
+                      </div>
+                    ),
+                    th: ({ node, ...props }) => (
+                      <th
+                        className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-black uppercase tracking-wider"
+                        {...props}
+                      />
+                    ),
+                    td: ({ node, ...props }) => (
+                      <td
+                        className="px-6 py-4 whitespace-nowrap text-sm text-black"
+                        {...props}
+                      />
+                    ),
+                    ul: ({ node, ...props }) => (
+                      <ul className="list-disc pl-6 space-y-1" {...props} />
+                    ),
+                    ol: ({ node, ...props }) => (
+                      <ol className="list-decimal pl-6 space-y-1" {...props} />
+                    ),
+                    li: ({ node, ...props }) => (
+                      <li className="text-gray-900" {...props} />
+                    ),
+                    h1: ({ node, ...props }) => (
+                      <h1
+                        className="text-3xl md:text-4xl font-bold text-gray-900 mb-4"
+                        {...props}
+                      />
+                    ),
+                    h2: ({ node, ...props }) => (
+                      <h2
+                        className="text-2xl md:text-3xl font-bold text-gray-900 mb-4"
+                        {...props}
+                      />
+                    ),
+                    h3: ({ node, ...props }) => (
+                      <h3
+                        className="text-xl md:text-2xl font-bold text-gray-900 mb-4"
+                        {...props}
+                      />
+                    ),
+                    h4: ({ node, ...props }) => (
+                      <h4
+                        className="text-lg md:text-xl font-bold text-gray-900 mb-4"
+                        {...props}
+                      />
+                    ),
+                    h5: ({ node, ...props }) => (
+                      <h5
+                        className="text-base md:text-lg font-bold text-gray-900 mb-4"
+                        {...props}
+                      />
+                    ),
+                    h6: ({ node, ...props }) => (
+                      <h6
+                        className="text-sm md:text-base font-bold text-gray-900 mb-4"
+                        {...props}
+                      />
+                    ),
+                    hr: ({ node, ...props }) => (
+                      <hr
+                        className="my-8 border-t border-gray-200"
+                        {...props}
+                      />
+                    ),
+                    blockquote: ({ node, ...props }) => (
+                      <blockquote
+                        className="border-l-4 border-gray-300 pl-4 italic text-gray-900 mb-4"
+                        {...props}
+                      />
+                    ),
+                    strong: ({ node, ...props }) => (
+                      <strong
+                        className="font-semibold text-gray-900"
+                        {...props}
+                      />
+                    ),
+                    em: ({ node, ...props }) => (
+                      <em
+                        className="italic text-gray-900"
+                        {...props}
+                      />
+                    ),
+                  }}
+                >
+                  {post.content}
+                </ReactMarkdown>
+              </div>
+
+              {post.tags && post.tags.length > 0 && (
+                <div className="mt-8 pt-8 border-t border-gray-200">
+                  <h2 className="text-lg font-semibold text-gray-900 mb-4">Tags</h2>
+                  <div className="flex flex-wrap gap-2">
+                    {post.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </article>
         </div>
       </div>
-    </div>
+    </>
   );
 } 
