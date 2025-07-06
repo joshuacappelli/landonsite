@@ -2,7 +2,7 @@
 import { useState, useEffect, use } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { Calendar, MapPin, Tag, ArrowLeft, Clock, Share2 } from "lucide-react"
+import { Calendar, MapPin, Tag, ArrowLeft, Clock } from "lucide-react"
 import Nav from "../../components/nav"
 import CountryNav from "../../components/countryNav"
 import Loader from "../../components/loader"
@@ -79,7 +79,7 @@ export default function BlogPost({ params }: { params: Promise<{ id: string }> }
                 <ArrowLeft className="w-8 h-8 text-slate-400" />
               </div>
               <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-4">Post not found</h1>
-              <p className="text-slate-600 mb-8">The blog post you're looking for doesn't exist.</p>
+              <p className="text-slate-600 mb-8">The blog post you&apos;re looking for doesn&apos;t exist.</p>
               <Link
                 href="/blog"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 font-medium"

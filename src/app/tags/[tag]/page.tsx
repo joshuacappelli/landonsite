@@ -153,7 +153,7 @@ export default function TagPage({ params }: { params: Promise<{ tag: string }> }
                 </div>
                 <h3 className="text-xl md:text-2xl font-bold text-slate-900 mb-3">No posts found</h3>
                 <p className="text-slate-600 mb-8 text-sm md:text-base">
-                  No posts found with the tag "{tag}". Try exploring other tags or browse all posts.
+                  No posts found with the tag &quot;{tag}&quot;. Try exploring other tags or browse all posts.
                 </p>
                 <Link
                   href="/blog"

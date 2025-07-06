@@ -28,6 +28,7 @@ export default function HeroSettingsPage() {
         const data = await response.json();
         setHeroSettings(data);
         console.log(data);
+        console.log(heroSettings);
         // Only set form data if data exists, otherwise keep default values
         if (data) {
           setFormData({
