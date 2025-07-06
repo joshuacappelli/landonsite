@@ -10,6 +10,7 @@ export default function HeroSettingsPage() {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
+    description2: '',
     fontColor: '#ffffff',
     textColor: '#000000',
     video: '',
@@ -26,8 +27,21 @@ export default function HeroSettingsPage() {
         
         const data = await response.json();
         setHeroSettings(data);
-        console.log(heroSettings);
-        setFormData(data);
+        console.log(data);
+        // Only set form data if data exists, otherwise keep default values
+        if (data) {
+          setFormData({
+            title: data.title || '',
+            description: data.description || '',
+            description2: data.description2 || '',
+            fontColor: data.fontColor || '#ffffff',
+            textColor: data.textColor || '#000000',
+            video: data.video || '',
+            backgroundColor: data.backgroundColor || '#ffffff',
+            fontSize: data.fontSize || 20,
+            image: data.image || '',
+          });
+        }
       } catch (error) {
         console.error('Error fetching hero settings:', error);
       } finally {
@@ -106,6 +120,21 @@ export default function HeroSettingsPage() {
               id="description"
               name="description"
               value={formData.description}
+              onChange={handleChange}
+              rows={4}
+              required
+            />
+          </div>
+          
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description2">
+              Second Description
+            </label>
+            <textarea
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="description2"
+              name="description2"
+              value={formData.description2}
               onChange={handleChange}
               rows={4}
               required

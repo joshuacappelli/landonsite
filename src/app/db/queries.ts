@@ -14,6 +14,7 @@ export async function getHeroSettings() {
 export async function createHeroSettings(data: {
   title: string;
   description: string;
+  secondDescription: string;
   fontColor: string;
   textColor: string;
   video: string;
@@ -30,6 +31,7 @@ export async function updateHeroSettings(id: number, data: {
   id?: number;
   title: string;
   description: string;
+  secondDescription: string;
   fontColor: string;
   textColor: string;
   video: string;
@@ -72,6 +74,7 @@ export async function createHeroFavorite(data: {
   title: string;
   description: string;
   image: string;
+  blogId: number;
 }) {
   return await db.insert(heroFavorites).values(data);
 }
@@ -80,6 +83,7 @@ export async function updateHeroFavorite(id: number, data: {
   title: string;
   description: string;
   image: string;
+  blogId: number;
 }) {
   return await db
     .update(heroFavorites)
@@ -133,6 +137,7 @@ export async function createAboutMe(data: {
   description: string;
   secondDescription: string;
   image: string;
+  secondImage: string;
 }) {
   return await db.insert(aboutMe).values(data);
 }
@@ -143,6 +148,7 @@ export async function updateAboutMe(id: number, data: {
   description: string;
   secondDescription: string;
   image: string;
+  secondImage: string;
 }) {
   return await db
     .update(aboutMe)

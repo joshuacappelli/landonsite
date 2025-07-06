@@ -7,12 +7,14 @@ interface HeroFavorite {
   title: string;
   description: string;
   image: string;
+  blogId: number;
 }
 
 interface FormData {
   title: string;
   description: string;
   image: string;
+  blogId: number;
 }
 
 export default function HeroFavoritesPage() {
@@ -22,6 +24,7 @@ export default function HeroFavoritesPage() {
     title: '',
     description: '',
     image: '',
+    blogId: 0,
   });
   const [editingId, setEditingId] = useState<number | null>(null);
 
@@ -83,6 +86,7 @@ export default function HeroFavoritesPage() {
       title: favorite.title,
       description: favorite.description,
       image: favorite.image,
+      blogId: favorite.blogId,
     });
     setEditingId(favorite.id);
   };
@@ -110,6 +114,7 @@ export default function HeroFavoritesPage() {
       title: '',
       description: '',
       image: '',
+      blogId: 0,
     });
     setEditingId(null);
   };
@@ -166,6 +171,21 @@ export default function HeroFavoritesPage() {
               type="text"
               name="image"
               value={formData.image}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="blogId">
+              Blog ID
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="blogId"
+              type="number"
+              name="blogId"
+              value={formData.blogId}
               onChange={handleChange}
               required
             />

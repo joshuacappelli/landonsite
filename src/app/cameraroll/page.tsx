@@ -245,7 +245,7 @@ export default function CameraRoll() {
                     src={selectedMedia.image}
                     alt={`Photo from ${selectedMedia.name}`}
                     fill
-                    className="object-contain"
+                    className="object-cover"
                   />
                 ) : (
                   <video
@@ -256,23 +256,49 @@ export default function CameraRoll() {
                 )}
               </div>
               
-              <div className="p-6 bg-white">
-                <h3 className="text-xl font-semibold mb-2">{selectedMedia.name}</h3>
-                {selectedMedia.country && (
-                  <p className="text-gray-600 mb-2">{selectedMedia.country}</p>
-                )}
-                <p className="text-gray-600">
-                  {new Date(selectedMedia.date).toLocaleDateString()}
-                </p>
+              <div className="p-8 bg-white">
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">{selectedMedia.name}</h3>
+                    {selectedMedia.country && (
+                      <div className="flex items-center gap-2 mb-3">
+                        <svg className="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                        </svg>
+                        <span className="text-gray-700 font-medium">{selectedMedia.country}</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="text-right">
+                    <div className="flex items-center gap-2 text-gray-500">
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                      </svg>
+                      <time dateTime={selectedMedia.date} className="text-sm">
+                        {new Date(selectedMedia.date).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}
+                      </time>
+                    </div>
+                  </div>
+                </div>
+                
                 {selectedMedia.googleMaps && (
-                  <a
-                    href={selectedMedia.googleMaps}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-4 inline-block text-blue-500 hover:text-blue-600"
-                  >
-                    View on Google Maps
-                  </a>
+                  <div className="pt-4 border-t border-gray-200">
+                    <a
+                      href={selectedMedia.googleMaps}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors duration-200 font-medium"
+                    >
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5zm-5 5a2 2 0 012.828 0 1 1 0 101.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 105.656 5.656l1.5-1.5a1 1 0 10-1.414-1.414l-1.5 1.5a2 2 0 11-2.828-2.828l3-3z" clipRule="evenodd" />
+                      </svg>
+                      View on Google Maps
+                    </a>
+                  </div>
                 )}
               </div>
             </div>

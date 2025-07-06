@@ -1,0 +1,1 @@
+ALTER TABLE `hero_favorites` ADD `blog_id` integer;

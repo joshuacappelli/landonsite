@@ -16,12 +16,14 @@ interface HeroSettings {
   backgroundColor: string;
   fontSize: number;
   image: string;
+  secondDescription: string;
 }
 
 interface HeroFavorite {
   id: number;
   title: string;
   description: string;
+  blogId: number;
   image: string;
 }
 
@@ -187,10 +189,7 @@ export default function Home() {
                     </p>
                     
                     <p className="text-lg text-gray-600 dark:text-gray-300">
-                      Through this platform, I curate authentic travel experiences that go beyond 
-                      typical tourist attractions. I believe in sustainable tourism, connecting with 
-                      local communities, and creating memories that last a lifetime. Join me as we 
-                      explore this amazing world together, one adventure at a time.
+                      {heroSettings?.secondDescription}
                     </p>
 
                     <Link 
@@ -229,29 +228,30 @@ export default function Home() {
                 </div>
                 <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
                   {heroFavorites.map((favorite) => (
-                    <div 
-                      key={favorite.id}
-                      className="group relative aspect-video overflow-hidden rounded-xl shadow-lg 
-                               transition-all duration-500 ease-in-out hover:scale-105 hover:shadow-2xl
-                               cursor-pointer"
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-transparent 
-                                    opacity-75 group-hover:opacity-90 transition-opacity duration-500"></div>
-                      <Image
-                        src={favorite.image}
-                        alt={favorite.title}
-                        fill
-                        className="object-cover transform transition-transform duration-500 
-                                 group-hover:scale-110"
-                      />
-                      <div className="absolute bottom-0 left-0 p-6 transform transition-transform duration-500
-                                    group-hover:translate-y-[-8px]">
-                        <h3 className="text-2xl font-bold text-white group-hover:text-blue-200 
-                                     transition-colors duration-300">{favorite.title}</h3>
-                        <p className="text-white/0 group-hover:text-white/90 transition-all duration-500 
-                                    text-sm mt-2">{favorite.description}</p>
+                    <Link href={`/blog/${favorite.blogId}`} key={favorite.id}>
+                      <div 
+                        className="group relative aspect-video overflow-hidden rounded-xl shadow-lg 
+                                 transition-all duration-500 ease-in-out hover:scale-105 hover:shadow-2xl
+                                 cursor-pointer"
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-transparent 
+                                      opacity-75 group-hover:opacity-90 transition-opacity duration-500"></div>
+                        <Image
+                          src={favorite.image}
+                          alt={favorite.title}
+                          fill
+                          className="object-cover transform transition-transform duration-500 
+                                   group-hover:scale-110"
+                        />
+                        <div className="absolute bottom-0 left-0 p-6 transform transition-transform duration-500
+                                      group-hover:translate-y-[-8px]">
+                          <h3 className="text-2xl font-bold text-white group-hover:text-blue-200 
+                                       transition-colors duration-300">{favorite.title}</h3>
+                          <p className="text-white/0 group-hover:text-white/90 transition-all duration-500 
+                                      text-sm mt-2">{favorite.description}</p>
+                        </div>
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </div>
@@ -267,24 +267,25 @@ export default function Home() {
                 </div>
                 <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {heroTags.map((tag) => (
-                    <div 
-                      key={tag.id}
-                      className="group relative aspect-video overflow-hidden rounded-xl shadow-lg 
-                               transition-all duration-500 ease-in-out hover:scale-105"
-                    >
-                      <Image
-                        src={tag.image}
-                        alt={tag.tag}
-                        fill
-                        className="object-cover transform transition-transform duration-500 
-                                 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent 
-                                    opacity-75 group-hover:opacity-90 transition-opacity duration-500"></div>
-                      <div className="absolute bottom-0 left-0 p-6 w-full">
-                        <h3 className="text-2xl font-bold text-white mb-2">{tag.tag}</h3>
+                    <Link href={`/tags/${tag.tag}`} key={tag.id}>
+                      <div 
+                        className="group relative aspect-video overflow-hidden rounded-xl shadow-lg 
+                                 transition-all duration-500 ease-in-out hover:scale-105"
+                      >
+                        <Image
+                          src={tag.image}
+                          alt={tag.tag}
+                          fill
+                          className="object-cover transform transition-transform duration-500 
+                                   group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent 
+                                      opacity-75 group-hover:opacity-90 transition-opacity duration-500"></div>
+                        <div className="absolute bottom-0 left-0 p-6 w-full">
+                          <h3 className="text-2xl font-bold text-white mb-2">{tag.tag}</h3>
+                        </div>
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               </div>

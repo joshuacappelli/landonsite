@@ -10,6 +10,7 @@ interface AboutData {
   description: string;
   secondDescription: string;
   image: string;
+  secondImage: string;
 }
 
 interface QuickFact {
@@ -24,6 +25,7 @@ interface FormData {
   description: string;
   secondDescription: string;
   image: string;
+  secondImage: string;
 }
 
 interface NewFact {
@@ -41,6 +43,7 @@ export default function AboutPage() {
     description: '',
     secondDescription: '',
     image: '',
+    secondImage: '',
   });
   const [newFact, setNewFact] = useState<NewFact>({ title: '', description: '' });
   const [editingFactId, setEditingFactId] = useState<number | null>(null);
@@ -71,6 +74,7 @@ export default function AboutPage() {
             description: aboutData.description || '',
             secondDescription: aboutData.secondDescription || '',
             image: aboutData.image || '',
+            secondImage: aboutData.secondImage || '',
           });
         }
       } catch (error) {
@@ -292,19 +296,36 @@ export default function AboutPage() {
             />
           </div>
           
-          <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="image">
-              Image URL
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="image"
-              type="text"
-              name="image"
-              value={formData.image}
-              onChange={handleChange}
-              required
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="image">
+                Image URL
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="image"
+                type="text"
+                name="image"
+                value={formData.image}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            
+            <div>
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="secondImage">
+                Second Image URL
+              </label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                id="secondImage"
+                type="text"
+                name="secondImage"
+                value={formData.secondImage}
+                onChange={handleChange}
+                required
+              />
+            </div>
           </div>
           
           <div className="flex justify-end">

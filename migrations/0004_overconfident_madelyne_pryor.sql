@@ -1,0 +1,1 @@
+ALTER TABLE `about_me` ADD `second_image` text NOT NULL;

@@ -18,6 +18,7 @@ export const heroSettings = sqliteTable('hero_settings', {
     id: integer('id').primaryKey(),
     title: text('title').notNull(),
     description: text('description').notNull(),
+    secondDescription: text('second_description').notNull(),
     fontColor: text('font_color').notNull(),
     textColor: text('text_color').notNull(),
     video: text('video').notNull(),
@@ -30,6 +31,7 @@ export const heroFavorites = sqliteTable('hero_favorites', {
     id: integer('id').primaryKey(),
     title: text('title').notNull(),
     description: text('description').notNull(),
+    blogId: integer('blog_id'),
     image: text('image').notNull(),
 });
 
@@ -84,6 +86,7 @@ export const aboutMe = sqliteTable('about_me', {
     description: text('description').notNull(),
     secondDescription: text('second_description').notNull(),
     image: text('image').notNull(),
+    secondImage: text('second_image').notNull(),
     createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`CURRENT_TIMESTAMP`),
 });
 

@@ -1,0 +1,1 @@
+ALTER TABLE `hero_settings` ADD `second_description` text NOT NULL;
